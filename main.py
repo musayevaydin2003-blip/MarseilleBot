@@ -3,9 +3,19 @@ import json
 import asyncio
 import re
 import logging
+import threading
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 import yt_dlp
+
+# =====================================================================
+# 🛠️ PYTHON 3.14 ASYNCIO EVENT LOOP FIX
+# =====================================================================
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
 # =====================================================================
 # 🛠️ PROFESSIONAL LOGGING CORE
@@ -19,10 +29,10 @@ logger = logging.getLogger("MarseilleProEngine")
 # =====================================================================
 # 🔑 SYSTEM CONFIGURATION
 # =====================================================================
-BOT_TOKEN = "7538291024:AAH_Bura_BotFather_Tokeni_Gelecek"
-API_ID = 12345678  
+BOT_TOKEN = "8918931473:AAGldV4Bg-PsU4jQSsFJvlrBAr0PkuL9zug"
+API_ID = 39652160
 API_HASH = "b420b9b22e9a3698bc600c4e3052116c"
-ADMIN_ID = 123456789  # Statistika üçün şəxsi Telegram ID-niz
+ADMIN_ID = 5166421109  # Statistika üçün şəxsi Telegram ID-niz
 
 app = Client("MarseilleProV5", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 DB_FILE = "marseille_v5_users.json"
@@ -206,6 +216,17 @@ async def admin_stats(client, message: Message):
     total_users = len(db)
     await message.reply_text(f"📊 **Marseille Core Canlı Statistika:**\n\nSistemdəki toplam istifadəçi sayısı: `{total_users}`")
 
-if __name__ == "__main__":
+# =====================================================================
+# 🚀 ASYNC RUN ENGINE WITH EVENT LOOP INTEGRATION
+# =====================================================================
+async def main():
+    await app.start()
     print("🔥 MARSEILLE V5 ULTIMATE ENGINE ONLINE!")
-    app.run()
+    await asyncio.Event().wait()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except RuntimeError:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
